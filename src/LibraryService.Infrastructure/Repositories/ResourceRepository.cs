@@ -4,6 +4,7 @@ using LibraryService.Core.Domain;
 using LibraryService.Core.Repositories;
 using LibraryService.Infrastructure.Ef;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace LibraryService.Infrastructure.Repositories
 {
@@ -17,13 +18,13 @@ namespace LibraryService.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<GenericResource>> GetAllAsync()
-            => await _context.GenericResources.IgnoreAutoIncludes().ToListAsync();
+            => await _context.GenericResources.Include(e => e.Editions).IgnoreAutoIncludes().ToListAsync();
 
         public async Task<GenericResource> GetAsync(int id)
             => await _context.GenericResources.SingleOrDefaultAsync(x => x.Id == id);
 
-        public async Task<GenericResource> GetAsync(string title)
-            => await _context.GenericResources.SingleOrDefaultAsync(x => x.GenericResourceName.Contains(title));
+        public async Task<IEnumerable<GenericResource>> GetAllAsync(string title)
+            => await _context.GenericResources.Where(x => x.GenericResourceName.Contains(title)).ToListAsync();
 
         public async Task<bool> IsAvailable(int id)
         {

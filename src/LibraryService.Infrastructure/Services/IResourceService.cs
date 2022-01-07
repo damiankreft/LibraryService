@@ -4,10 +4,10 @@ using LibraryService.Core.Domain;
 
 namespace LibraryService.Infrastructure.Services
 {
-    public interface IResourceService
+    public interface IResourceService : IService
     {
-        Task<List<GenericResource>> GetAllAsync();
-        Task<GenericResource> GetAsync(string email);
+        Task<IEnumerable<GenericResource>> GetAllAsync();
+        Task<IEnumerable<GenericResource>> GetAllAsync(string title);
         Task<GenericResource> GetAsync(int id);
         Task<bool> IsAvailable(int id);
     }

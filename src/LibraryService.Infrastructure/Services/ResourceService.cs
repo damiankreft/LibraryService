@@ -15,15 +15,11 @@ namespace LibraryService.Infrastructure.Services
             _repository = repository;
         }
 
-        public async Task<List<GenericResource>> GetAllAsync()
-        {
-            var resources =  await _repository.GetAllAsync();
+        public async Task<IEnumerable<GenericResource>> GetAllAsync()
+            => await _repository.GetAllAsync();
 
-            return resources.ToList();
-        }
-
-        public async Task<GenericResource> GetAsync(string title)
-            => await _repository.GetAsync(title);
+        public async Task<IEnumerable<GenericResource>> GetAllAsync(string title)
+            => await _repository.GetAllAsync(title);
 
         public async Task<GenericResource> GetAsync(int id)
             => await _repository.GetAsync(id);

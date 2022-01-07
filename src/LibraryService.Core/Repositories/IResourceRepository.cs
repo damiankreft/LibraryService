@@ -8,7 +8,7 @@ namespace LibraryService.Core.Repositories
     {
         Task<IEnumerable<GenericResource>> GetAllAsync();
         Task<GenericResource> GetAsync(int id);
-        Task<GenericResource> GetAsync(string title);
+        Task<IEnumerable<GenericResource>> GetAllAsync(string title);
         Task<bool> IsAvailable(int id);
     }
 }

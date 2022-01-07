@@ -1,6 +1,6 @@
 namespace LibraryService.Infrastructure.Services
 {
-    public interface ILeaseService
+    public interface ILeaseService : IService
     {
          
     }
