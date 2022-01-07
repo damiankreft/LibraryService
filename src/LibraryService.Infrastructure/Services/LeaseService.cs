@@ -1,10 +1,16 @@
+using LibraryService.Core.Repositories;
+
 namespace LibraryService.Infrastructure.Services
 {
-    public class LeaseService
+    public class LeaseService : ILeaseService
     {
-        public LeaseService()
+        private readonly ILeaseRepository _repository;
+
+        public LeaseService(ILeaseRepository repository)
         {
-            
+            _repository = repository;
         }
+
+        
     }
 }
