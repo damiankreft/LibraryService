@@ -23,6 +23,7 @@ namespace LibraryService.Api.Controllers
         /// Gets all accounts
         /// </summary>
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<AccountDto>>> GetAll()
         {
             var accounts = await _accountService.GetAllAsync();

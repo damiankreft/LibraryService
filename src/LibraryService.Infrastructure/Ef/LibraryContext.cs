@@ -73,7 +73,7 @@ namespace LibraryService.Infrastructure.Ef
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(30)
+                    .HasMaxLength(60)
                     .HasColumnName("password");
 
                 entity.Property(e => e.Salt)
