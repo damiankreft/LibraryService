@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class Nationality
+    public partial class Nationality
     {
         public Nationality()
         {

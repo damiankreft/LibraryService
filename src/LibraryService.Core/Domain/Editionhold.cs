@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class EditionHold
+    public partial class EditionHold
     {
         public int Id { get; set; }
         public int EditionId { get; set; }

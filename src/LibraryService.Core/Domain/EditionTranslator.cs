@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class EditionTranslator
+    public partial class EditionTranslator
     {
-        public int Id { get; set; }
         public int EditionId { get; set; }
         public int TranslatorId { get; set; }
 

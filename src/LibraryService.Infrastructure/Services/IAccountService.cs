@@ -10,5 +10,6 @@ namespace LibraryService.Infrastructure.Services
         Task<AccountDto> GetAsync(string email);
         Task LoginAsync(string email, string password);
         Task RegisterAsync(string email, string lastname, string firstname, string password);
+        Task SetToken(string email, string token);
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class Edition
+    public partial class Edition
     {
         public Edition()
         {
-            EditionTranslators = new HashSet<EditionTranslator>();
             Editionholds = new HashSet<EditionHold>();
             Resourceinstances = new HashSet<ResourceInstance>();
         }
@@ -20,7 +21,6 @@ namespace LibraryService.Core.Domain
         public short? DatePublished { get; set; }
 
         public virtual GenericResource GenericResource { get; set; }
-        public virtual ICollection<EditionTranslator> EditionTranslators { get; set; }
         public virtual ICollection<EditionHold> Editionholds { get; set; }
         public virtual ICollection<ResourceInstance> Resourceinstances { get; set; }
     }

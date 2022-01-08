@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class GenericResource
+    public partial class GenericResource
     {
         public GenericResource()
         {
             Editions = new HashSet<Edition>();
             GenericresourceAuthors = new HashSet<GenericResourceAuthor>();
-            Genericresourceholds = new HashSet<GenericResourceHold>();
         }
 
         public int Id { get; set; }
@@ -19,6 +20,5 @@ namespace LibraryService.Core.Domain
         public virtual ResourceType ResourceTypeNavigation { get; set; }
         public virtual ICollection<Edition> Editions { get; set; }
         public virtual ICollection<GenericResourceAuthor> GenericresourceAuthors { get; set; }
-        public virtual ICollection<GenericResourceHold> Genericresourceholds { get; set; }
     }
 }

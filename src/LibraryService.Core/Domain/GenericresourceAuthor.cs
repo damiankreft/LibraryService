@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class GenericResourceAuthor
+    public partial class GenericResourceAuthor
     {
-        public int Id { get; set; }
         public int GenericResourceId { get; set; }
         public int AuthorId { get; set; }
 

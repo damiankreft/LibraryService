@@ -1,39 +1,49 @@
-using LibraryService.Core.Domain;
-using LibraryService.Infrastructure.Settings;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using LibraryService.Infrastructure;
+using LibraryService.Infrastructure.Settings;
+using LibraryService.Core.Domain;
+
+#nullable disable
 
 namespace LibraryService.Infrastructure.Ef
 {
-    public class LibraryContext : DbContext
+    public partial class LibraryContext : DbContext
     {
         private readonly SqlSettings _settings;
+        public LibraryContext()
+        {
+        }
 
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Author> Authors { get; set; }
-        public DbSet<AuthorNationality> AuthorNationalities { get; set; }
-        public DbSet<Edition> Editions { get; set; }
-        public DbSet<EditionTranslator> EditionTranslators { get; set; }
-        public DbSet<EditionHold> EditionHolds { get; set; }
-        public DbSet<GenericResource> GenericResources { get; set; }
-        public DbSet<GenericResourceAuthor> GenericResourceAuthors { get; set; }
-        public DbSet<GenericResourceHold> GenericResourceHolds { get; set; }
-        public DbSet<Institution> Institutions { get; set; }
-        public DbSet<Lease> Leases { get; set; }
-        public DbSet<Librarian> Librarians { get; set; }
-        public DbSet<Nationality> Nationalities { get; set; }
-        public DbSet<ResourceInstance> ResourceInstances { get; set; }
-        public DbSet<ResourceInstanceHold> ResourceInstanceHolds { get; set; }
-        public DbSet<ResourceType> ResourceTypes { get; set; }
-        public DbSet<Translator> Translators { get; set; }
         public LibraryContext(DbContextOptions<LibraryContext> options, SqlSettings settings) : base(options)
         {
             _settings = settings;
         }
 
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Author> Authors { get; set; }
+        public virtual DbSet<AuthorNationality> AuthorNationalities { get; set; }
+        public virtual DbSet<Edition> Editions { get; set; }
+        public virtual DbSet<EditionTranslator> EditionTranslators { get; set; }
+        public virtual DbSet<EditionHold> Editionholds { get; set; }
+        public virtual DbSet<GenericResource> GenericResources { get; set; }
+        public virtual DbSet<GenericResourceAuthor> GenericresourceAuthors { get; set; }
+        public virtual DbSet<GenericResourceHold> Genericresourceholds { get; set; }
+        public virtual DbSet<Institution> Institutions { get; set; }
+        public virtual DbSet<Lease> Leases { get; set; }
+        public virtual DbSet<Librarian> Librarians { get; set; }
+        public virtual DbSet<Nationality> Nationalities { get; set; }
+        public virtual DbSet<ResourceInstance> Resourceinstances { get; set; }
+        public virtual DbSet<ResourceInstanceHold> Resourceinstanceholds { get; set; }
+        public virtual DbSet<ResourceType> Resourcetypes { get; set; }
+        public virtual DbSet<Translator> Translators { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(_settings.ConnectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"));
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,19 +77,17 @@ namespace LibraryService.Infrastructure.Ef
                     .HasColumnName("lease_counter")
                     .HasDefaultValueSql("'0'");
 
+                entity.Property(e => e.Password)
+                    .HasMaxLength(64)
+                    .HasColumnName("password");
+
                 entity.Property(e => e.Rating)
                     .HasColumnName("rating")
                     .HasDefaultValueSql("'10'");
 
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(60)
-                    .HasColumnName("password");
-
                 entity.Property(e => e.Salt)
-                    .IsRequired()
                     .HasMaxLength(255)
-                    .HasColumnName("Salt");
+                    .HasColumnName("salt");
             });
 
             modelBuilder.Entity<Author>(entity =>
@@ -100,15 +108,13 @@ namespace LibraryService.Infrastructure.Ef
 
             modelBuilder.Entity<AuthorNationality>(entity =>
             {
+                entity.HasKey(e => new { e.AuthorId, e.NationalityId })
+                    .HasName("PRIMARY")
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
                 entity.ToTable("author_nationality");
 
-                entity.HasIndex(e => e.AuthorId, "author_id");
-
                 entity.HasIndex(e => e.NationalityId, "nationality_id");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
 
                 entity.Property(e => e.AuthorId)
                     .HasColumnType("int(11)")
@@ -169,15 +175,13 @@ namespace LibraryService.Infrastructure.Ef
 
             modelBuilder.Entity<EditionTranslator>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("edition_translator");
 
                 entity.HasIndex(e => e.EditionId, "edition_id");
 
                 entity.HasIndex(e => e.TranslatorId, "translator_id");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
 
                 entity.Property(e => e.EditionId)
                     .HasColumnType("int(11)")
@@ -188,13 +192,13 @@ namespace LibraryService.Infrastructure.Ef
                     .HasColumnName("translator_id");
 
                 entity.HasOne(d => d.Edition)
-                    .WithMany(p => p.EditionTranslators)
+                    .WithMany()
                     .HasForeignKey(d => d.EditionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("edition_translator_ibfk_1");
 
                 entity.HasOne(d => d.Translator)
-                    .WithMany(p => p.EditionTranslators)
+                    .WithMany()
                     .HasForeignKey(d => d.TranslatorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("edition_translator_ibfk_2");
@@ -254,23 +258,21 @@ namespace LibraryService.Infrastructure.Ef
 
             modelBuilder.Entity<GenericResourceAuthor>(entity =>
             {
+                entity.HasKey(e => new { e.GenericResourceId, e.AuthorId })
+                    .HasName("PRIMARY")
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
                 entity.ToTable("genericresource_author");
 
                 entity.HasIndex(e => e.AuthorId, "author_id");
 
-                entity.HasIndex(e => e.GenericResourceId, "generic_resource_id");
-
-                entity.Property(e => e.Id)
+                entity.Property(e => e.GenericResourceId)
                     .HasColumnType("int(11)")
-                    .HasColumnName("id");
+                    .HasColumnName("generic_resource_id");
 
                 entity.Property(e => e.AuthorId)
                     .HasColumnType("int(11)")
                     .HasColumnName("author_id");
-
-                entity.Property(e => e.GenericResourceId)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("generic_resource_id");
 
                 entity.HasOne(d => d.Author)
                     .WithMany(p => p.GenericresourceAuthors)
@@ -287,13 +289,11 @@ namespace LibraryService.Infrastructure.Ef
 
             modelBuilder.Entity<GenericResourceHold>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("genericresourcehold");
 
                 entity.HasIndex(e => e.GenericResourceId, "generic_resource_id");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
 
                 entity.Property(e => e.GenericResourceId)
                     .HasColumnType("int(11)")
@@ -304,7 +304,7 @@ namespace LibraryService.Infrastructure.Ef
                     .HasColumnName("resource_reservation_date");
 
                 entity.HasOne(d => d.GenericResource)
-                    .WithMany(p => p.Genericresourceholds)
+                    .WithMany()
                     .HasForeignKey(d => d.GenericResourceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("genericresourcehold_ibfk_1");
@@ -457,13 +457,11 @@ namespace LibraryService.Infrastructure.Ef
 
             modelBuilder.Entity<ResourceInstanceHold>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("resourceinstancehold");
 
                 entity.HasIndex(e => e.ResourceInstanceId, "resource_instance_id");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
 
                 entity.Property(e => e.ResourceInstanceId)
                     .IsRequired()
@@ -475,7 +473,7 @@ namespace LibraryService.Infrastructure.Ef
                     .HasColumnName("resource_reservation_date");
 
                 entity.HasOne(d => d.ResourceInstance)
-                    .WithMany(p => p.Resourceinstanceholds)
+                    .WithMany()
                     .HasForeignKey(d => d.ResourceInstanceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("resourceinstancehold_ibfk_1");
@@ -511,6 +509,10 @@ namespace LibraryService.Infrastructure.Ef
                     .HasMaxLength(40)
                     .HasColumnName("lastname");
             });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

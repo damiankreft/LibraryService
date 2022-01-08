@@ -28,6 +28,7 @@ namespace LibraryService.Infrastructure.Handlers.Accounts
                 await _accountService.LoginAsync(command.Email, command.Password);
                 
                 var jwt = _jwtHandler.CreateToken(command.Email);
+                // await _accountService.SetToken(command.Email, jwt.Token);
                 _cache.SetJwt(command.TokenId, jwt);
             }
             catch (InvalidCredentialException ex)

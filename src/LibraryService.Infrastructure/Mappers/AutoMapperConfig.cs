@@ -10,6 +10,7 @@ namespace LibraryService.Infrastructure.Mappers
             => new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<Account, AccountDto>();
+                    cfg.CreateMap<AccountDto, Account>();
                 })
                 .CreateMapper();
     }

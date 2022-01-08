@@ -23,7 +23,6 @@ namespace LibraryService.Api.Controllers
         /// Gets all accounts
         /// </summary>
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<List<AccountDto>>> GetAll()
         {
             var accounts = await _accountService.GetAllAsync();
@@ -49,6 +48,7 @@ namespace LibraryService.Api.Controllers
         /// <param name="command"></param>
         /// <response code="201">Account created successfully</response>
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Register([FromBody] CreateAccount command)
         {
             try

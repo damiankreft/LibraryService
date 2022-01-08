@@ -74,5 +74,18 @@ namespace LibraryService.Infrastructure.Services
             account = new Account(lastname, firstname, email, hash, salt);
             await _accountRepository.AddAsync(account);
         }
+
+        public async Task SetToken(string email, string token)
+        {
+            var accountDto = await GetAsync(email);
+
+            if (string.IsNullOrEmpty(email)) {
+                throw new NullReferenceException();
+            }
+
+            var account = _mapper.Map<Account>(accountDto);
+            account.Token = "qwerty";
+            await _accountRepository.UpdateAsync(account);
+        }
     }
 }

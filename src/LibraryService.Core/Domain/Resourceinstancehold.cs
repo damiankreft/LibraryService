@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace LibraryService.Core.Domain
 {
-    public class ResourceInstanceHold
+    public partial class ResourceInstanceHold
     {
-        public int Id { get; set; }
         public string ResourceInstanceId { get; set; }
         public DateTime ResourceReservationDate { get; set; }
 
