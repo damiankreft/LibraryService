@@ -18,7 +18,7 @@ namespace LibraryService.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<GenericResource>> GetAllAsync()
-            => await _context.GenericResources.Include(e => e.Editions).IgnoreAutoIncludes().ToListAsync();
+            => await _context.GenericResources.Include(t => t.Editions).Include(t => t.GenericresourceAuthors).ToListAsync();
 
         public async Task<GenericResource> GetAsync(int id)
             => await _context.GenericResources.SingleOrDefaultAsync(x => x.Id == id);

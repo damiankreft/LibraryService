@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 
 namespace LibraryService.Api
 {
@@ -40,7 +41,10 @@ namespace LibraryService.Api
             }).AddMemoryCache()
                     .AddControllersWithViews()
                     .AddJsonOptions(options
-                        => options.JsonSerializerOptions.WriteIndented = true);
+                        => {
+                            options.JsonSerializerOptions.WriteIndented = true;
+                            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                        });
             services.AddJwtAuthentication(jwtSettings, securitySettings)
                     .AddAuthorization();
 
